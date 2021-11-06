@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+        <style>
+            * {
+                border: 0;
+                margin: 0;
+                padding: 0;
+                outline: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-weight: 600;
+                user-select: none;
+                color: #FFFFFF;
+            }
+            body {
+                background-color: #222222;
+            }
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            .screens {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #222222;
+            }
+            .screen {
+                display: none;
+            }
+            .lds-ring {
+                display: inline-block;
+                position: absolute;
+                width: 48px;
+                height: 48px;
+                background-color: #303030;
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%)
+            }
+            .lds-ring div {
+                box-sizing: border-box;
+                display: block;
+                position: absolute;
+                width: 48px;
+                height: 48px;
+                border-width: 5px;
+                border-radius: 50%;
+                border: 5px solid #23cf5f;
+                animation: lds-ring 1.175s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                border-color: #23cf5f transparent transparent transparent;
+            }
+            .lds-ring div:nth-child(1) {
+                animation-delay: -0.31s;
+            }
+            .lds-ring div:nth-child(2) {
+                animation-delay: -0.3s;
+            }
+            .lds-ring div:nth-child(3) {
+                animation-delay: -0.15s;
+            }
+            .top-navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background-color: #303030;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            }
+            .status {
+                background-color: #D1B000;
+                color: #FFFFFF;
+                font-weight: 600;
+                font-size: 12.5px;
+                padding: 2.5px;
+                border-radius: 5px;
+                margin-left: 7.5px;
+                padding-left: 5px;
+                padding-right: 5px;
+                display: none;
+            }
+            .bottom-navbar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 10px;
+                background-image: linear-gradient(to top, #000000, rgba(0, 0, 0, 0));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .tabs {
+                width: 100%;
+                height: 100%;
+            }
+            .tab {
+                display: none;
+            }
+            .logo {
+                padding-top: 12.5px;
+                padding-bottom: 12.5px;
+                width: 17.5vh;
+            }
+            .center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .connect-message {
+                font-weight: 600;
+                font-size: 12.5px;
+                color: #FFFFFF;
+                background-color: #35b863;
+                text-align: center;
+                padding: 5px;
+                display: none;
+            }
+            .recommends-container {
+                margin-top: 6px;
+                display: flex;
+                overflow-x: scroll;
+            }
+            .track-container-recommends {
+                margin-right: 12.5px;
+                margin-bottom: 5px;
+                margin-top: 5px;
+                background-color: #303030;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                padding: 5px;
+                text-align: left;
+            }
+            .track-container-recommends:nth-child(1) {
+                margin-left: 12.5px;
+            }
+            .image-recommend {
+                width: calc(64px * 2);
+                height: calc(64px * 2);
+                border-radius: 10px;
+                margin: 0;
+            }
+            .title-recommended {
+                margin-left: 15px;
+            }
+            .track-rec-name {
+                font-size: 12.5px;
+                color: #FFFFFF;
+                font-weight: 450;
+                margin-left: 5px;
+            }
+            .track-rec-artist {
+                font-size: 12px;
+                color: #DDDDDD;
+                font-weight: 450;
+                margin-left: 5px;
+            }
+            .navbar-btn {
+                color: #FFFFFF;
+                background-color: rgba(0, 0, 0, 0);
+                width: 33.33%;
+                height: 35px;
+            }
+            .label {
+                margin-top: 2.5px;
+                font-size: 9px;
+            }
+            .top {
+                position: fixed;
+                left: 0;
+                right: 0;
+                background-color: #303030;
+                margin-left: 2.5vh;
+                margin-right: 2.5vh;
+                padding: 5px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5)
+            }
+            i {
+                font-size: 20px;
+            }
+            @keyframes lds-ring {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes opacity-on {
+                0% {
+                    opacity: 0;
+                } 100% {
+                    opacity: 1;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="screens">
+            <div class="screen" id="loading-screen">
+                <div class="lds-ring">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+            </div>
+            <div class="screen" id="home-screen">
+                <div class="top-navbar">
+                    <div class="center">
+                        <img class="logo" src="https://s22.q4cdn.com/540910603/files/design/Spotify_Logo_White.png">
+                        <div class="status">PRO</div>
+                    </div>
+                    <div class="connect-message">Connected to Volumio</div>
+                </div>
+                <div class="content">
+                    <div class="tabs">
+                        <div class="tab" id="home-tab">
+                            <div class="recommended">
+                                <p class="title-recommended">Recommended For You</p>
+                                <div class="recommends-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="top">
+                    A
+                </div>
+                <div class="bottom-navbar">
+                    <button class="navbar-btn">
+                        <i class="fas fa-home"></i>
+                        <p class="label">Home</p>
+                    </button>
+                    <button class="navbar-btn">
+                        <i class="fas fa-search"></i>
+                        <p class="label">Search</p>
+                    </button>
+                    <button class="navbar-btn">
+                        <i class="fas fa-bookmark"></i>
+                        <p class="label">My Library</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        const API = (function() {
+            const _requestToken = async (clientId, clientSecret, redirectURI) => {
+                if (window.location.search.length > 0) {
+                    const params = new URLSearchParams(window.location.search)
+                    const code = params.get("code")
+                    let url = "https://accounts.spotify.com/api/token"
+                    let body_params = ""
+                    body_params += "grant_type=authorization_code"
+                    body_params += "&code=" + code
+                    body_params += "&redirect_uri=" + encodeURI(redirectURI)
+                    body_params += "&client_id=" + clientId
+                    body_params += "&client_secret=" + clientSecret
+                    const result = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Authorization": "Basic " + btoa(clientId + ':' + clientSecret)
+                        },
+                        body: body_params
+                    })
+                    const data = await result.json()
+                    const token = data.access_token
+                    localStorage.clear()
+                    localStorage.setItem("token", token)
+                    window.history.pushState("", "", redirectURI)
+                    window.location.reload()
+                } else {
+                    let url = "https://accounts.spotify.com/authorize"
+                    url += "?client_id=" + clientId
+                    url += "&response_type=code"
+                    url += "&redirect_uri=" + encodeURI(redirectURI)
+                    url += "&show_dialog=true"
+                    url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private user-follow-read user-follow-modify"
+                    window.location.href = url
+                }
+            }
+            const _getToken = async () => {
+                const token = localStorage.getItem("token")
+                return token
+            }
+            const _me = async (token) => {
+                const result = await fetch("https://api.spotify.com/v1/me", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
+                return data
+            }
+            const _getFollowed = async (token) => {
+                const result = await fetch("https://api.spotify.com/v1/me/following?type=artist", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
+                return data
+            }
+            const _getDevices = async (token) => {
+                const result = await fetch("https://api.spotify.com/v1/me/player/devices", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
+                return data
+            }
+            const _play = async (token, deviceId, URIs) => {
+                const result = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        uris: URIs
+                    })
+                })
+            }
+            const _getTopTracks = async (token, id, market) => {
+                const result = await fetch(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=${market.toUpperCase()}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
+                return data
+            }
+            const _getMyTracks = async (token) => {
+                const result = await fetch(`https://api.spotify.com/v1/me/tracks`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
+                return data
+            }
+            return { 
+                requestToken(clientId, clientSecret, redirectURI) {
+                    _requestToken(clientId, clientSecret, redirectURI)
+                },
+                getToken() {
+                    return _getToken()
+                },
+                me(token) {
+                    return _me(token)
+                },
+                getDevices(token) {
+                    return _getDevices(token)
+                },
+                getFollowed(token) {
+                    return _getFollowed(token)
+                },
+                getTopTracks(token, id, market) {
+                    return _getTopTracks(token, id, market)
+                },
+                play(token, deviceId, URIs) {
+                    return _play(token, deviceId, URIs)
+                },
+                getMyTracks(token) {
+                    return _getMyTracks(token)
+                }
+            }
+        })()
+        const App = (function(API) {
+            const _select = async (type, number) => {
+                const items = document.getElementsByClassName(type.toLowerCase())
+                var count = 0
+                for (var item in items) {
+                    item = items[item]
+                    if (item.id !== undefined) {
+                        var name = item.id
+                        name = name.replace(`-${type.toLowerCase()}`, "")
+                        if (type.toLowerCase() === "screen") {
+                            if (number === count) {
+                                item.style.display = "block"
+                                if (name === "home") {
+                                    item.style.animation = "opacity-on 1.5s"
+                                }
+                            } else {
+                                item.style.display = "none"
+                            }
+                            count += 1
+                        } else {
+                            if (number === count) {
+                                item.style.display = "block"
+                                item.style.animation = "opacity-on 1.5s"
+                            } else {
+                                item.style.display = "none"
+                            }
+                            count += 1
+                        }
+                    }
+                }
+            }
+            const _home = async () => {
+                const token = await API.getToken()
+                const info = await API.me(token)
+                try {
+                    if (info.error.status === 401) {
+                        App.reset()
+                    }
+                } catch {
+                    const devices = await API.getDevices(token)
+                    const followed = await API.getFollowed(token)
+                    const topNavbar = document.getElementsByClassName("top-navbar")[0]
+                    const bottomNavbar = document.getElementsByClassName("bottom-navbar")[0]
+                    const content = document.getElementsByClassName("content")[0]
+                    const status = document.getElementsByClassName("status")[0]
+                    const connect_message = document.getElementsByClassName("connect-message")[0]
+                    const recommended_container = document.getElementsByClassName("recommends-container")[0]
+                    const controls = document.getElementsByClassName("top")[0]
+                    if (info.product === "premium") {
+                        var found = false
+                        for (var device in devices.devices) {
+                            device = devices.devices[device]
+                            if (device.name.toLowerCase() === "volumio") {
+                                found = true
+                            }
+                        }
+                        if (found !== true) {
+                            device = devices.devices[0]
+                        }
+                        connect_message.textContent = `Connected to ${device.name}`
+                        connect_message.style.display = "block"
+                        status.style.display = "block"
+                        var recommended = []
+                        for (var artist in followed.artists.items) {
+                            artist = followed.artists.items[artist]
+                            var tracks = await API.getTopTracks(token, artist.id, "sg")
+                            for (var track in tracks.tracks) {
+                                track = tracks.tracks[track]
+                                if (track.is_playable === true) {
+                                    recommended.push({
+                                        image: track.album.images[0].url,
+                                        artist: track.artists[0].name,
+                                        id: track.id,
+                                        uri: track.uri,
+                                        name: track.name
+                                    })
+                                }
+                            }
+                        }
+                        for (var item in recommended) {
+                            item = recommended[item]
+                            var track = document.createElement("button")
+                            track.id = JSON.stringify({
+                                token: token,
+                                deviceId: device.id,
+                                uri: item.uri
+                            })
+                            track.onclick = function() {
+                                var data = JSON.parse(this.id)
+                                API.play(data.token, data.deviceId, [
+                                    data.uri
+                                ])
+                            }
+                            track.className = "track-container-recommends"
+                            track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
+                            recommended_container.appendChild(track)
+                        }
+                    } else {
+                        console.log("You're not Pro.")
+                    }
+                    setTimeout(function() {
+                        App.select("tab", 0)
+                        App.select("Screen", 1)
+                        controls.style.bottom = bottomNavbar.offsetHeight + 5 + "px"
+                        content.style.marginTop = topNavbar.offsetHeight + 11 + "px"
+                    }, 1000)
+                }
+            }
+            const run = async () => {
+                App.select("Screen", 0)
+                setTimeout(function() {
+                    if (localStorage.getItem("token") !== null) {
+                        App.home()
+                    } else {
+                        API.requestToken(
+                            "0b03e149303f41669f3c4a34c576f298",
+                            "8706bbc78b0140bd9d17938411a1003a",
+                            "http://127.0.0.1:5500/index.html"
+                        )
+                    }
+                }, 1000)
+            }
+            return {
+                select(type, number) {
+                    _select(type, number)
+                },
+                init() {
+                    run()
+                },
+                home() {
+                    _home()
+                },
+                reset() {
+                    localStorage.clear()
+                    window.history.pushState("", "", "http://127.0.0.1:5500/index.html")
+                    window.location.reload()
+                }
+            }
+        })(API)
+        App.init()
+    </script>
+</html>
