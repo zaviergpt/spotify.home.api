@@ -13,10 +13,15 @@
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 font-weight: 600;
                 user-select: none;
-                color: #FFFFFF;
+            }
+            html {
+                scroll-behavior: smooth;
             }
             body {
                 background-color: #222222;
+            }
+            p {
+                color: #FFFFFF;
             }
             ::-webkit-scrollbar {
                 display: none;
@@ -35,10 +40,10 @@
             .lds-ring {
                 display: inline-block;
                 position: absolute;
-                width: 48px;
-                height: 48px;
-                background-color: #303030;
+                width: 40px;
+                height: 40px;
                 padding: 10px;
+                background-color: #303030;
                 border-radius: 10px;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
                 top: 50%;
@@ -49,22 +54,28 @@
                 box-sizing: border-box;
                 display: block;
                 position: absolute;
-                width: 48px;
-                height: 48px;
-                border-width: 5px;
+                width: 40px;
+                height: 40px;
+                border-width: 4px;
                 border-radius: 50%;
-                border: 5px solid #23cf5f;
+                border: 4px solid #23cf5f;
                 animation: lds-ring 1.175s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-                border-color: #23cf5f transparent transparent transparent;
+                border-color: #282828 #282828 #282828 #282828;
             }
             .lds-ring div:nth-child(1) {
                 animation-delay: -0.31s;
+                z-index: 100000;
+                border-color: #23cf5f transparent transparent transparent;
             }
             .lds-ring div:nth-child(2) {
                 animation-delay: -0.3s;
+                z-index: 100000;
+                border-color: #23cf5f transparent transparent transparent;
             }
             .lds-ring div:nth-child(3) {
                 animation-delay: -0.15s;
+                z-index: 100000;
+                border-color: #23cf5f transparent transparent transparent;
             }
             .top-navbar {
                 position: fixed;
@@ -73,6 +84,7 @@
                 right: 0;
                 background-color: #303030;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                z-index: 100000;
             }
             .status {
                 background-color: #D1B000;
@@ -91,8 +103,8 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                padding: 10px;
-                background-image: linear-gradient(to top, #000000, rgba(0, 0, 0, 0));
+                padding-top: 2.5px;
+                background-color: #303030;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -109,6 +121,14 @@
                 padding-bottom: 12.5px;
                 width: 17.5vh;
             }
+            .raspberry-pi-powered {
+                width: 100px;
+                border-radius: 5px;
+                background-color: #FFFFFF;
+                margin-right: 15px;
+                border: 2px solid #ba1d4a;
+                display: none;
+            }
             .center {
                 display: flex;
                 align-items: center;
@@ -123,18 +143,34 @@
                 padding: 5px;
                 display: none;
             }
+            .recently-played {
+                margin-top: 7.5px;
+            }
+            .topsongs-played {
+                margin-top: 7.5px;
+            }
             .recommends-container {
+                margin-top: 6px;
+                display: flex;
+                overflow-x: scroll;
+            }
+            .recently-container {
+                margin-top: 6px;
+                display: flex;
+                overflow-x: scroll;
+            }
+            .topsongs-container {
                 margin-top: 6px;
                 display: flex;
                 overflow-x: scroll;
             }
             .track-container-recommends {
                 margin-right: 12.5px;
-                margin-bottom: 5px;
+                margin-bottom: 6.25px;
                 margin-top: 5px;
                 background-color: #303030;
                 border-radius: 10px;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
                 padding: 5px;
                 text-align: left;
             }
@@ -150,6 +186,12 @@
             .title-recommended {
                 margin-left: 15px;
             }
+            .title-recently {
+                margin-left: 15px;
+            }
+            .title-topsongs {
+                margin-left: 15px;
+            }
             .track-rec-name {
                 font-size: 12.5px;
                 color: #FFFFFF;
@@ -163,28 +205,170 @@
                 margin-left: 5px;
             }
             .navbar-btn {
-                color: #FFFFFF;
+                color: #AAAAAA;
                 background-color: rgba(0, 0, 0, 0);
-                width: 33.33%;
-                height: 35px;
+                width: calc(100% / 3);
+                padding-top: 7.5px;
+                padding-bottom: 7.5px;
             }
             .label {
                 margin-top: 2.5px;
                 font-size: 9px;
+                color: #AAAAAA
             }
             .top {
                 position: fixed;
                 left: 0;
                 right: 0;
-                background-color: #303030;
-                margin-left: 2.5vh;
-                margin-right: 2.5vh;
+                background-color: #333333;
                 padding: 5px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            }
+            .active {
+                color: #FFFFFF;
+            }
+            .image-control {
+                width: 48px;
+                height: 48px;
+                background-color: #333333;
+                border-radius: 5px;
+            }
+            .image-control-2 {
+                width: 64px;
+                height: 64px;
+                background-color: #262626;
+                border-radius: 5px;
+            }
+            .image-control-3 {
+                width: 54px;
+                height: 54px;
+                background-color: #262626;
+                border-radius: 5px;
+            }
+            .btn-playlist {
+                background-color: #333333;
+                width: calc(calc(100% / 2) - 20px);
+                padding: 5px;
+                margin-left: 10px;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                padding-left: 7.5px;
                 border-radius: 10px;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5)
+                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5)
+            }
+            .flex-track {
+                float: left;
+                display: flex;
+            }
+            .library-title {
+                font-size: 17.5px;
+                text-align: center;
+                padding: 0;
+                margin: 0;
+                margin-top: 15px
+            }
+            .title-and-artist {
+                text-align: left;
+                font-weight: 300;
+                margin-left: 15px;
+                font-size: 14px;
+                margin-top: auto;
+                margin-bottom: auto;
+            }
+            .playlist-title {
+                font-weight: 450;
+                color: #FFFFFF;
+            }
+            .playlist-total {
+                font-weight: 450;
+                color: #DDDDDD;
+            }
+            .library-title {
+                margin-bottom: 15px;
+            }
+            .playlist-tab {
+                display: none;
+            }
+            .playlist-tab-title {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            .track-btn {
+                width: calc(100% - 20px);
+                padding: 5px;
+                padding-left: 7.5px;
+                background-color: #303030;
+                margin-bottom: 7.5px;
+                margin-left: 10px;
+                margin-right: 10px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5)
+            }
+            .input-container {
+                display: flex;
+                width: calc(75% - 20px);
+                background-color: #FFFFFF;
+                border-radius: 10px;
+            }
+            .input-btn {
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                width: 30%;
+                color: #000000;
+                background-color: #EEEEEE;
+            }
+            .select-option {
+                background-color: #DDDDDD;
+                height: 75%;
+                margin-top: auto;
+                margin-bottom: auto;
+                margin-right: 5px;
+                border-radius: 5px;
+                padding: 2.5px;
+                border: 1px solid #616161;
+            }
+            .control-set {
+                position: fixed;
+                right: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: calc(58px - 10px);
+                width: calc(58px - 10px);
+            }
+            .toggle-btn {
+                background-color: rgba(0, 0, 0, 0);
+                color: #FFFFFF;
+            }
+            #home-search-tab {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: -10px
+            }
+            #frame {
+                margin-left: 15px;
+                font-size: 13px;
+                margin-top: calc(auto - 5px)
+            }
+            #artist-name {
+                font-size: 15px;
+            }
+            #pause-icon {
+                font-size: 22.5px;
+                margin-left: 5px;
             }
             i {
                 font-size: 20px;
+            }
+            input[type=text] {
+                font-size: 15px;
+                padding: 7.5px;
+                width: calc(80% - 10px);
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+                padding-left: 10px;
+                font-weight: 450;
             }
             @keyframes lds-ring {
                 0% {
@@ -201,9 +385,45 @@
                     opacity: 1;
                 }
             }
+            @keyframes opacity-off {
+                0% {
+                    opacity: 1;
+                } 100% {
+                    opacity: 0;
+                }
+            }
+            @media only screen and (max-width: 600px) {
+                .btn-playlist {
+                    width: calc(100% - 20px);
+                }
+                .image-recommend {
+                    width: calc(calc(64px * 0.875) * 2);
+                    height: calc(calc(64px * 0.875) * 2);
+                }
+                .track-rec-name {
+                    font-size: 11.5px;
+                    color: #FFFFFF;
+                    font-weight: 450;
+                    margin-left: 4px;
+                }
+                .track-rec-artist {
+                    font-size: 11px;
+                    color: #DDDDDD;
+                    font-weight: 450;
+                    margin-left: 4px;
+                }
+                #search-title {
+                    display: none;
+                }
+                .input-container {
+                    margin-top: 12.5px;
+                    width: calc(100% - 30px);
+                    margin-bottom: 12.5px
+                }
+            }
         </style>
     </head>
-    <body>
+    <body onload="App.init()">
         <div class="screens">
             <div class="screen" id="loading-screen">
                 <div class="lds-ring">
@@ -213,10 +433,11 @@
             <div class="screen" id="home-screen">
                 <div class="top-navbar">
                     <div class="center">
+                        <img class="raspberry-pi-powered" src="https://www.raspberrypi.org/app/uploads/2017/06/Powered-by-Raspberry-Pi-Logo_Outline-Colour-Screen-500x153.png" id="detect-raspberry-pi">
                         <img class="logo" src="https://s22.q4cdn.com/540910603/files/design/Spotify_Logo_White.png">
                         <div class="status">PRO</div>
                     </div>
-                    <div class="connect-message">Connected to Volumio</div>
+                    <div class="connect-message"></div>
                 </div>
                 <div class="content">
                     <div class="tabs">
@@ -225,22 +446,62 @@
                                 <p class="title-recommended">Recommended For You</p>
                                 <div class="recommends-container"></div>
                             </div>
+                            <div class="recently-played">
+                                <p class="title-recently">Recently Played</p>
+                                <div class="recently-container"></div>
+                            </div>
+                            <div class="topsongs-played">
+                                <p class="title-topsongs">Your Top Songs</p>
+                                <div class="topsongs-container"></div>
+                            </div>
+                        </div>
+                        <div class="tab" id="search-tab">
+                            <div id="home-search-tab">
+                                <p class="library-title" style="font-size: 20px; margin-right: 20px;" id="search-title">Search</p>
+                                <div class="input-container">
+                                    <input type="text" id="search-input" autocomplete="off">
+                                    <select class="select-option" id="search-select">
+                                        <option value="track" selected="selected">Track</option>
+                                        <option value="artist">Artist</option>
+                                    </select>
+                                    <button class="input-btn">
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="searched" id="searched"></div>
+                        </div>
+                        <div class="tab" id="library-tab">
+                            <div class="playlist-tabs" id="library">
+                                <div class="playlist-tab" id="home-playlist-tab">
+                                    <p class="library-title">My Library</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="top">
-                    A
+                    <div class="flex-track" style="margin-left: 0px;">
+                        <div class="image-control" id="background"></div>
+                        <div class="title-and-artist" id="frame">
+                            <p class="playlist-title" id="title"></p>
+                            <p class="playlist-total" id="artist"></p>
+                        </div>
+                        <div class="control-set">
+                            <button class="toggle-btn" id="toggle-btn"></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="bottom-navbar">
-                    <button class="navbar-btn">
+                    <button class="navbar-btn" onclick='App.select("tab", 0)'>
                         <i class="fas fa-home"></i>
                         <p class="label">Home</p>
                     </button>
-                    <button class="navbar-btn">
+                    <button class="navbar-btn" onclick='App.select("tab", 1)'>
                         <i class="fas fa-search"></i>
                         <p class="label">Search</p>
                     </button>
-                    <button class="navbar-btn">
+                    <button class="navbar-btn" onclick='App.select("tab", 2); App.select("playlist-tab", 0)'>
                         <i class="fas fa-bookmark"></i>
                         <p class="label">My Library</p>
                     </button>
@@ -250,6 +511,10 @@
     </body>
     <script>
         const API = (function() {
+            const ifError = async () => {
+                window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
+                window.location.reload()
+            }
             const _requestToken = async (clientId, clientSecret, redirectURI) => {
                 if (window.location.search.length > 0) {
                     const params = new URLSearchParams(window.location.search)
@@ -281,75 +546,217 @@
                     url += "&response_type=code"
                     url += "&redirect_uri=" + encodeURI(redirectURI)
                     url += "&show_dialog=true"
-                    url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private user-follow-read user-follow-modify"
+                    url += "&scope=user-read-currently-playing user-read-private user-top-read user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private user-follow-read user-follow-modify"
                     window.location.href = url
                 }
             }
             const _getToken = async () => {
-                const token = localStorage.getItem("token")
-                return token
+                try {
+                    const token = localStorage.getItem("token")
+                    return token
+                } catch {
+                    await ifError()
+                }
             }
             const _me = async (token) => {
-                const result = await fetch("https://api.spotify.com/v1/me", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                const data = await result.json()
-                return data
+                try {
+                    const result = await fetch("https://api.spotify.com/v1/me", {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
             }
             const _getFollowed = async (token) => {
-                const result = await fetch("https://api.spotify.com/v1/me/following?type=artist", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                const data = await result.json()
-                return data
+                try {
+                    const result = await fetch("https://api.spotify.com/v1/me/following?type=artist", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
             }
             const _getDevices = async (token) => {
-                const result = await fetch("https://api.spotify.com/v1/me/player/devices", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                const data = await result.json()
-                return data
+                try {
+                    const result = await fetch("https://api.spotify.com/v1/me/player/devices", {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
             }
             const _play = async (token, deviceId, URIs) => {
-                const result = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        uris: URIs
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            uris: URIs
+                        })
                     })
-                })
+                } catch {
+                    await ifError()
+                }
             }
             const _getTopTracks = async (token, id, market) => {
-                const result = await fetch(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=${market.toUpperCase()}`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                const data = await result.json()
-                return data
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/artists/${id}/top-tracks?limit=20&market=${market.toUpperCase()}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
+            }
+            const _getRecentlyPlayed = async (token) => {
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/me/player/recently-played`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
+                
             }
             const _getMyTracks = async (token) => {
-                const result = await fetch(`https://api.spotify.com/v1/me/tracks`, {
-                    method: "GET",
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/me/tracks`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
+            }
+            const _getMyPlaylists = async (token) => {
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/me/playlists`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
+            }
+            const _getMyTopSongs = async (token) => {
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=10&offset=13`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
+            }
+            const _getPlaylist = async (token, id) => {
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
+            }
+            const _search = async (token, query, type) => {
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    await ifError()
+                }
+            }
+            const _currentlyPlaying = async (token) => {
+                try {
+                    const result = await fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    const data = await result.json()
+                    return data
+                } catch {
+                    return null
+                }
+            }
+            const _toggle = async (token) => {
+                const result = await fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+                    method: 'GET',
                     headers: {
-                        "Authorization": `Bearer ${token}`
+                        'Authorization' : "Bearer " + token
                     }
                 })
                 const data = await result.json()
-                return data
+                try {
+                    const playing = data.is_playing
+                    if (playing === true) {
+                        const result = await fetch("https://api.spotify.com/v1/me/player/pause", {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization' : "Bearer " + token
+                            }
+                        })
+                    } else {
+                        const result = await fetch("https://api.spotify.com/v1/me/player/play", {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization' : "Bearer " + token
+                            }
+                        })
+                    }
+                } catch {
+                    console.log("Not Playing Anything.")
+                }
             }
             return { 
                 requestToken(clientId, clientSecret, redirectURI) {
@@ -375,10 +782,115 @@
                 },
                 getMyTracks(token) {
                     return _getMyTracks(token)
-                }
+                },
+                getRecentlyPlayed(token) {
+                    return _getRecentlyPlayed(token)
+                },
+                getMyPlaylists(token) {
+                    return _getMyPlaylists(token)
+                },
+                getMyTopSongs(token) {
+                    return _getMyTopSongs(token)
+                },
+                getPlaylist(token, id) {
+                    return _getPlaylist(token, id)
+                },
+                search(token, query, type) {
+                    return _search(token, query, type)
+                },
+                currentlyPlaying(token) {
+                    return _currentlyPlaying(token)
+                },
+                toggle(token) {
+                    _toggle(token)
+                }       
             }
         })()
         const App = (function(API) {
+            const _search = async (token) => {
+                const query = document.getElementById("search-input").value
+                const type = document.getElementById("search-select").value
+                const searched = document.getElementById("searched")
+                const deviceId = localStorage.getItem("deviceId")
+                searched.innerHTML = ""
+                const results = await API.search(token, query, type)
+                if (type.toLowerCase() === "track") {
+                    const tracks = results.tracks.items
+                    for (var track in tracks) {
+                        track = tracks[track]
+                        track = {
+                            image: track.album.images[0].url,
+                            artist: track.artists[0].name,
+                            id: track.id,
+                            uri: track.uri,
+                            name: track.name
+                        }
+                        var track_btn = document.createElement("button")
+                        track_btn.id = JSON.stringify({
+                            token: token,
+                            deviceId: deviceId,
+                            uri: track.uri
+                        })
+                        track_btn.onclick = function() {
+                            var data = JSON.parse(this.id)
+                            API.play(data.token, data.deviceId, [
+                                data.uri
+                            ])
+                            setTimeout(function() {
+                                _update(token)
+                            }, 450)
+                        }
+                        track_btn.className = "track-btn"
+                        track_btn.innerHTML = `<div class="flex-track"><img class="image-control-3" src="${track.image}"><div class="title-and-artist"><p class="playlist-title">${track.name}</p><p class="playlist-total">${track.artist}</p></div></div>`
+                        searched.appendChild(track_btn)
+                    }
+                } else {
+                    const artists = results.artists.items
+                    for (var artist in artists) {
+                        artist = artists[artist]
+                        artist = {
+                            image: artist.images[0].url,
+                            name: artist.name,
+                            id: artist.id
+                        }
+                        var track_btn = document.createElement("button")
+                        track_btn.className = "btn-playlist"
+                        track_btn.innerHTML = `<div class="flex-track"><img class="image-control-3" style="width: 42px; height: 42px;" src="${artist.image}"><div class="title-and-artist"><p class="playlist-title" id="artist-name">${artist.name}</p></div></div>`
+                        searched.appendChild(track_btn)
+                    }
+                }
+            }
+            const _update = async (token) => {
+                const image_frame = document.getElementById("background")
+                const currentlyPlaying = await API.currentlyPlaying(token)
+                const toggle_btn = document.getElementsByClassName("toggle-btn")[0]
+                const device = localStorage.getItem("deviceSet")
+                if (currentlyPlaying !== null && currentlyPlaying !== undefined) {
+                    const track = currentlyPlaying.item
+                    const image = document.createElement("img")
+                    const info = {
+                        image: track.album.images[0].url,
+                        artist: track.artists[0].name,
+                        id: track.id,
+                        uri: track.uri,
+                        name: track.name
+                    }
+                    image_frame.innerHTML = ""
+                    image.src = info.image
+                    image.className = "image-control"
+                    info.name = info.name.split(" (")[0]
+                    document.getElementById("title").textContent = info.name
+                    document.getElementById("artist").textContent = info.artist
+                    if (currentlyPlaying.is_playing === true) {
+                        toggle_btn.innerHTML = `<i class="fas fa-pause" id="pause-icon"></i>`
+                    } else {
+                        toggle_btn.innerHTML = `<i class="fas fa-play"></i>`
+                    }
+                    image_frame.appendChild(image)
+                } else {
+                    image_frame.innerHTML = ""
+                }
+            }
             const _select = async (type, number) => {
                 const items = document.getElementsByClassName(type.toLowerCase())
                 var count = 0
@@ -391,23 +903,59 @@
                             if (number === count) {
                                 item.style.display = "block"
                                 if (name === "home") {
+                                    item.style.opacity = 1
                                     item.style.animation = "opacity-on 1.5s"
                                 }
                             } else {
                                 item.style.display = "none"
                             }
                             count += 1
-                        } else {
+                        } else if (type.toLowerCase() === "tab") {
                             if (number === count) {
                                 item.style.display = "block"
-                                item.style.animation = "opacity-on 1.5s"
+                                item.style.animation = "opacity-on 0.75s"
+                                var button = document.getElementsByClassName("navbar-btn")[count]
+                                var label = document.getElementsByClassName("label")[count]
+                                button.style.color = "#FFFFFF"
+                                label.style.color = "#FFFFFF"
+                            } else {
+                                var button = document.getElementsByClassName("navbar-btn")[count]
+                                var label = document.getElementsByClassName("label")[count]
+                                button.style.color = "#AAAAAA"
+                                label.style.color = "#AAAAAA"
+                                item.style.display = "none"
+                                document.documentElement.scrollTop = 0
+                            }
+                            count += 1
+                        } else if (type.toLowerCase() === "playlist-tab") {
+                            if (number === count) {
+                                item.style.display = "block"
+                                item.style.animation = "opacity-on 0.75s"
                             } else {
                                 item.style.display = "none"
+                                document.documentElement.scrollTop = 0
+                            }
+                            count += 1
+                        } else if (type.toLowerCase() === "search-tab") {
+                            if (number === count) {
+                                if (number === 0) {
+                                    item.style.display = "flex"
+                                } else {
+                                    item.style.display = "block"
+                                }
+                            } else {
+                                item.style.display = "none"
+                                document.documentElement.scrollTop = 0
                             }
                             count += 1
                         }
                     }
                 }
+            }
+            const convert = async (millis) => {
+                var minutes = Math.floor(millis / 60000);
+                var seconds = ((millis % 60000) / 1000).toFixed(0);
+                return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
             }
             const _home = async () => {
                 const token = await API.getToken()
@@ -419,13 +967,44 @@
                 } catch {
                     const devices = await API.getDevices(token)
                     const followed = await API.getFollowed(token)
+                    const myTracks = await API.getMyTracks(token)
+                    const myPlaylists = await API.getMyPlaylists(token)
+                    const recentlyPlayed = await API.getRecentlyPlayed(token)
+                    const myTopSongs = await API.getMyTopSongs(token)
+                    const toggle_btn = document.getElementsByClassName("toggle-btn")[0]
+                    toggle_btn.id = JSON.stringify({
+                        token: token
+                    })
+                    toggle_btn.onclick = function() {
+                        const data = JSON.parse(this.id)
+                        console.log(data.token)
+                        API.toggle(data.token)
+                        setTimeout(function() {
+                            _update(token)
+                        }, 450)
+                    }
+                    const letters = 18
                     const topNavbar = document.getElementsByClassName("top-navbar")[0]
                     const bottomNavbar = document.getElementsByClassName("bottom-navbar")[0]
                     const content = document.getElementsByClassName("content")[0]
                     const status = document.getElementsByClassName("status")[0]
                     const connect_message = document.getElementsByClassName("connect-message")[0]
                     const recommended_container = document.getElementsByClassName("recommends-container")[0]
+                    const recently_container = document.getElementsByClassName("recently-container")[0]
+                    const top_songs_container = document.getElementsByClassName("topsongs-container")[0]
                     const controls = document.getElementsByClassName("top")[0]
+                    const library = document.getElementById("library")
+                    const library_home = document.getElementById("home-playlist-tab")
+                    const input_btn = document.getElementsByClassName("input-btn")[0]
+                    input_btn.id = JSON.stringify({
+                        token: token
+                    })
+                    input_btn.onclick = function() {
+                        const data = JSON.parse(this.id)
+                        App.search(data.token)
+                    }
+                    recommended_container.innerHTML = ""
+                    recently_container.innerHTML = ""
                     if (info.product === "premium") {
                         var found = false
                         for (var device in devices.devices) {
@@ -437,16 +1016,23 @@
                         if (found !== true) {
                             device = devices.devices[0]
                         }
+                        localStorage.setItem("deviceId", device.id)
                         connect_message.textContent = `Connected to ${device.name}`
                         connect_message.style.display = "block"
                         status.style.display = "block"
                         var recommended = []
                         for (var artist in followed.artists.items) {
                             artist = followed.artists.items[artist]
-                            var tracks = await API.getTopTracks(token, artist.id, "sg")
+                            var tracks = await API.getTopTracks(token, artist.id, info.country)
                             for (var track in tracks.tracks) {
                                 track = tracks.tracks[track]
                                 if (track.is_playable === true) {
+                                    if (track.name.length > letters) {
+                                        track.name = track.name.substring(0, letters) + "..."
+                                    }
+                                    if (track.artists[0].name.length > letters) {
+                                        track.artists[0].name = track.artists[0].name.substring(0, letters) + "..."
+                                    }
                                     recommended.push({
                                         image: track.album.images[0].url,
                                         artist: track.artists[0].name,
@@ -470,35 +1056,225 @@
                                 API.play(data.token, data.deviceId, [
                                     data.uri
                                 ])
+                                setTimeout(function() {
+                                    _update(token)
+                                }, 450)
                             }
                             track.className = "track-container-recommends"
                             track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
                             recommended_container.appendChild(track)
                         }
+                        var recently = []
+                        var found = []
+                        for (var track in recentlyPlayed.items) {
+                            track = recentlyPlayed.items[track].track
+                            if (found.includes(track.name.toLowerCase()) != true) {
+                                found.push(track.name.toLowerCase())
+                                if (track.name.length > letters) {
+                                    track.name = track.name.substring(0, letters) + "..."
+                                }
+                                if (track.artists[0].name.length > letters) {
+                                    track.artists[0].name = track.artists[0].name.substring(0, letters) + "..."
+                                }
+                                recently.push({
+                                    image: track.album.images[0].url,
+                                    artist: track.artists[0].name,
+                                    id: track.id,
+                                    uri: track.uri,
+                                    name: track.name
+                                })
+                            }
+                        }
+                        for (var item in recently) {
+                            item = recently[item]
+                            var track = document.createElement("button")
+                            track.id = JSON.stringify({
+                                token: token,
+                                deviceId: device.id,
+                                uri: item.uri
+                            })
+                            track.onclick = function() {
+                                var data = JSON.parse(this.id)
+                                API.play(data.token, data.deviceId, [
+                                    data.uri
+                                ])
+                                setTimeout(function() {
+                                    _update(token)
+                                }, 450)
+                            }
+                            track.className = "track-container-recommends"
+                            track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
+                            recently_container.appendChild(track)
+                        }
+                        var topSongs = []
+                        for (var track in myTopSongs.items) {
+                            track = myTopSongs.items[track]
+                            if (track.name.length > letters) {
+                                track.name = track.name.substring(0, letters) + "..."
+                            }
+                            if (track.artists[0].name.length > letters) {
+                                track.artists[0].name = track.artists[0].name.substring(0, letters) + "..."
+                            }
+                            topSongs.push({
+                                image: track.album.images[0].url,
+                                artist: track.artists[0].name,
+                                id: track.id,
+                                uri: track.uri,
+                                name: track.name
+                            })
+                        }
+                        for (var item in topSongs) {
+                            item = topSongs[item]
+                            var track = document.createElement("button")
+                            track.id = JSON.stringify({
+                                token: token,
+                                deviceId: device.id,
+                                uri: item.uri
+                            })
+                            track.onclick = function() {
+                                var data = JSON.parse(this.id)
+                                API.play(data.token, data.deviceId, [
+                                    data.uri
+                                ])
+                                setTimeout(function() {
+                                    _update(token)
+                                }, 450)
+                            }
+                            track.className = "track-container-recommends"
+                            track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
+                            top_songs_container.appendChild(track)
+                        }
+                        var playlists = []
+                        var liked = []
+                        for (var track in myTracks.items) {
+                            track = myTracks.items[track].track
+                            liked.push({
+                                image: track.album.images[0].url,
+                                artist: track.artists[0].name,
+                                id: track.id,
+                                uri: track.uri,
+                                name: track.name
+                            })
+                        }
+                        playlists.push({
+                            image: "https://misc.scdn.co/liked-songs/liked-songs-300.png",
+                            name: "Liked Songs",
+                            tracks: liked,
+                            items: liked.length,
+                            total: myTracks.total,
+                            owner: info.display_name
+                        })
+                        for (var playlist in myPlaylists.items) {
+                            playlist = myPlaylists.items[playlist]
+                            if (playlist.tracks.total > 0) {
+                                var image = null
+                                if (playlist.images.length > 0) {
+                                    image = playlist.images[0].url
+                                }
+                                tracks = await API.getPlaylist(token, playlist.id)
+                                tracks = tracks.tracks.items
+                                var items = []
+                                for (var track in tracks) {
+                                    track = tracks[track].track
+                                    items.push({
+                                        image: track.album.images[0].url,
+                                        artist: track.artists[0].name,
+                                        id: track.id,
+                                        uri: track.uri,
+                                        name: track.name
+                                    })
+                                }
+                                playlists.push({
+                                    image: image,
+                                    name: playlist.name,
+                                    tracks: items,
+                                    items: items.length,
+                                    total: items.length,
+                                    owner: playlist.owner.display_name
+                                })
+                            }
+                        }
+                        var count = 1
+                        for (var playlist in playlists) {
+                            playlist = playlists[playlist]
+                            var playlist_div = document.createElement("div")
+                            playlist_div.className = "playlist-tab"
+                            playlist_div.innerHTML = `<p class="playlist-tab-title">${playlist.name}</p>`
+                            for (var track in playlist.tracks) {
+                                track = playlist.tracks[track]
+                                var track_btn = document.createElement("button")
+                                track_btn.id = JSON.stringify({
+                                    token: token,
+                                    deviceId: device.id,
+                                    uri: track.uri
+                                })
+                                track_btn.onclick = function() {
+                                    var data = JSON.parse(this.id)
+                                    API.play(data.token, data.deviceId, [
+                                        data.uri
+                                    ])
+                                    setTimeout(function() {
+                                        _update(token)
+                                    }, 450)
+                                }
+                                track_btn.className = "track-btn"
+                                track_btn.innerHTML = `<div class="flex-track"><img class="image-control-3" src="${track.image}"><div class="title-and-artist"><p class="playlist-title">${track.name}</p><p class="playlist-total">${track.artist}</p></div></div>`
+                                playlist_div.appendChild(track_btn)
+                            }
+                            var button = document.createElement("button")
+                            button.className = "btn-playlist"
+                            button.id = count
+                            button.onclick = function() {
+                                App.select("playlist-tab", parseInt(this.id))
+                            }
+                            if (playlist.items === playlist.total) {
+                                button.innerHTML = `<div class="flex-track"><img class="image-control-2" src="${playlist.image}"><div class="title-and-artist"><p class="playlist-title">${playlist.name}</p><p class="playlist-total">${playlist.total} Songs</p></div></div>`
+                            } else {
+                                button.innerHTML = `<div class="flex-track"><img class="image-control-2" src="${playlist.image}"><div class="title-and-artist"><p class="playlist-title">${playlist.name}</p><p class="playlist-total">${playlist.items} out of ${playlist.total} Songs</p></div></div>`
+                            }
+                            library.appendChild(playlist_div)
+                            library_home.appendChild(button)
+                            count += 1
+                        }
+                        await _update(token)
                     } else {
                         console.log("You're not Pro.")
                     }
-                    setTimeout(function() {
-                        App.select("tab", 0)
-                        App.select("Screen", 1)
-                        controls.style.bottom = bottomNavbar.offsetHeight + 5 + "px"
-                        content.style.marginTop = topNavbar.offsetHeight + 11 + "px"
-                    }, 1000)
+                    App.select("tab", 0)
+                    App.select("Screen", 1)
+                    App.select("playlist-tab", 0)
+                    App.select("search-tab", 0)
+                    controls.style.bottom = bottomNavbar.offsetHeight -1 + "px"
+                    content.style.marginTop = topNavbar.offsetHeight + 11 + "px"
+                    content.style.paddingBottom = controls.offsetHeight + bottomNavbar.offsetHeight + 5 + "px"
+                    const screenSize = window.screen.height * window.screen.width
+                    const windowSize = window.innerWidth * window.innerHeight
+                    if ((windowSize/screenSize)*100 > 90) {
+                        const bottomSize = (controls.offsetHeight + bottomNavbar.offsetHeight) * (controls.offsetWidth + bottomNavbar.offsetWidth)
+                        const topSize = (topNavbar.offsetHeight * topNavbar.offsetWidth)
+                        const viewArea = screenSize - bottomSize - topSize
+                        const percentage = (viewArea/screenSize)*100
+                        if (percentage < 50) {
+                            const raspberry_certified = document.getElementsByClassName("raspberry-pi-powered")[0]
+                            raspberry_certified.style.display = "block"
+                            localStorage.setItem("deviceSet", "Raspberry Pi/Tablet")
+                        } else {
+                            localStorage.setItem("deviceSet", "Phone")
+                        }
+                    }
                 }
             }
             const run = async () => {
                 App.select("Screen", 0)
-                setTimeout(function() {
-                    if (localStorage.getItem("token") !== null) {
-                        App.home()
-                    } else {
-                        API.requestToken(
-                            "0b03e149303f41669f3c4a34c576f298",
-                            "8706bbc78b0140bd9d17938411a1003a",
-                            "https://oxfordbot.github.io/spotify.home.api/"
-                        )
-                    }
-                }, 1000)
+                if (localStorage.getItem("token") !== null) {
+                    App.home()
+                } else {
+                    API.requestToken(
+                        "0b03e149303f41669f3c4a34c576f298",
+                        "8706bbc78b0140bd9d17938411a1003a",
+                        "https://oxfordbot.github.io/spotify.home.api/"
+                    )
+                }
             }
             return {
                 select(type, number) {
@@ -514,9 +1290,15 @@
                     localStorage.clear()
                     window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
                     window.location.reload()
+                },
+                search(token) {
+                    _search(token)
                 }
             }
         })(API)
-        App.init()
+        window.addEventListener('resize', function() { 
+            document.getElementsByTagName("body")[0].innerHTML = ""
+            window.location.reload()
+        })
     </script>
 </html>
