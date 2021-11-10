@@ -835,6 +835,14 @@
             }
         })()
         const App = (function(API) {
+            const range = async (start, end) => {
+                var list = []
+                while (start < end) {
+                    list.push(start)
+                    start += 1
+                }
+                return list
+            }
             const _search = async (token) => {
                 const query = document.getElementById("search-input").value
                 const type = document.getElementById("search-select").value
@@ -844,26 +852,31 @@
                 const results = await API.search(token, query, type)
                 if (type.toLowerCase() === "track") {
                     const tracks = results.tracks.items
+                    var count = 0
                     for (var track in tracks) {
                         track = tracks[track]
+                        const array = await range(count, tracks.length)
+                        const uris = []
+                        for (var i in array) {
+                            i = array[i]
+                            uris.push(tracks[i].uri)
+                        }
                         track = {
                             image: track.album.images[0].url,
                             artist: track.artists[0].name,
                             id: track.id,
-                            uri: track.uri,
+                            uris: uris,
                             name: track.name
                         }
                         var track_btn = document.createElement("button")
                         track_btn.id = JSON.stringify({
                             token: token,
                             deviceId: deviceId,
-                            uri: track.uri
+                            uris: track.uris
                         })
                         track_btn.onclick = function() {
                             var data = JSON.parse(this.id)
-                            API.play(data.token, data.deviceId, [
-                                data.uri
-                            ])
+                            API.play(data.token, data.deviceId, data.uris)
                             setTimeout(function() {
                                 _update(token)
                             }, 450)
@@ -871,6 +884,7 @@
                         track_btn.className = "track-btn"
                         track_btn.innerHTML = `<div class="flex-track"><img class="image-control-3" src="${track.image}"><div class="title-and-artist"><p class="playlist-title">${track.name}</p><p class="playlist-total">${track.artist}</p></div></div>`
                         searched.appendChild(track_btn)
+                        count += 1
                     }
                 } else {
                     const artists = results.artists.items
@@ -1006,7 +1020,6 @@
                     })
                     toggle_btn.onclick = function() {
                         const data = JSON.parse(this.id)
-                        console.log(data.token)
                         API.toggle(data.token)
                         setTimeout(function() {
                             _update(data.token)
@@ -1073,19 +1086,24 @@
                                     }
                                 }
                             }
+                            var count = 0
                             for (var item in recommended) {
                                 item = recommended[item]
+                                const array = await range(count, recommended.length)
+                                var uris = []
+                                for (var i in array) {
+                                    i = array[i]
+                                    uris.push(recommended[i].uri)
+                                }
                                 var track = document.createElement("button")
                                 track.id = JSON.stringify({
                                     token: token,
                                     deviceId: device.id,
-                                    uri: item.uri
+                                    uris: uris
                                 })
                                 track.onclick = function() {
                                     var data = JSON.parse(this.id)
-                                    API.play(data.token, data.deviceId, [
-                                        data.uri
-                                    ])
+                                    API.play(data.token, data.deviceId, data.uris)
                                     setTimeout(function() {
                                         _update(data.token)
                                     }, waitTimeMS)
@@ -1093,6 +1111,7 @@
                                 track.className = "track-container-recommends"
                                 track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
                                 recommended_container.appendChild(track)
+                                count += 1
                             }
                             var recently = []
                             var found = []
@@ -1115,19 +1134,24 @@
                                     })
                                 }
                             }
+                            var count = 0
                             for (var item in recently) {
                                 item = recently[item]
+                                const array = await range(count, recently.length)
+                                var uris = []
+                                for (var i in array) {
+                                    i = array[i]
+                                    uris.push(recently[i].uri)
+                                }
                                 var track = document.createElement("button")
                                 track.id = JSON.stringify({
                                     token: token,
                                     deviceId: device.id,
-                                    uri: item.uri
+                                    uris: uris
                                 })
                                 track.onclick = function() {
                                     var data = JSON.parse(this.id)
-                                    API.play(data.token, data.deviceId, [
-                                        data.uri
-                                    ])
+                                    API.play(data.token, data.deviceId, data.uris)
                                     setTimeout(function() {
                                         _update(data.token)
                                     }, waitTimeMS)
@@ -1135,6 +1159,7 @@
                                 track.className = "track-container-recommends"
                                 track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
                                 recently_container.appendChild(track)
+                                count += 1
                             }
                             var topSongs = []
                             for (var track in myTopSongs.items) {
@@ -1153,19 +1178,25 @@
                                     name: track.name
                                 })
                             }
+                            var count = 0
                             for (var item in topSongs) {
                                 item = topSongs[item]
+                                var track = document.createElement("button")
+                                const array = await range(count, topSongs.length)
+                                var uris = []
+                                for (var i in array) {
+                                    i = array[i]
+                                    uris.push(topSongs[i].uri)
+                                }
                                 var track = document.createElement("button")
                                 track.id = JSON.stringify({
                                     token: token,
                                     deviceId: device.id,
-                                    uri: item.uri
+                                    uris: uris
                                 })
                                 track.onclick = function() {
                                     var data = JSON.parse(this.id)
-                                    API.play(data.token, data.deviceId, [
-                                        data.uri
-                                    ])
+                                    API.play(data.token, data.deviceId, data.uris)
                                     setTimeout(function() {
                                         _update(data.token)
                                     }, waitTimeMS)
@@ -1173,6 +1204,7 @@
                                 track.className = "track-container-recommends"
                                 track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
                                 top_songs_container.appendChild(track)
+                                count += 1
                             }
                             var playlists = []
                             var liked = []
@@ -1230,19 +1262,24 @@
                                 var playlist_div = document.createElement("div")
                                 playlist_div.className = "playlist-tab"
                                 playlist_div.innerHTML = `<p class="playlist-tab-title">${playlist.name}</p>`
+                                var count_2 = 0
                                 for (var track in playlist.tracks) {
                                     track = playlist.tracks[track]
                                     var track_btn = document.createElement("button")
+                                    const array = await range(count_2, playlist.tracks.length)
+                                    var uris = []
+                                    for (var i in array) {
+                                        i = array[i]
+                                        uris.push(playlist.tracks[i].uri)
+                                    }
                                     track_btn.id = JSON.stringify({
                                         token: token,
                                         deviceId: device.id,
-                                        uri: track.uri
+                                        uris: uris
                                     })
                                     track_btn.onclick = function() {
                                         var data = JSON.parse(this.id)
-                                        API.play(data.token, data.deviceId, [
-                                            data.uri
-                                        ])
+                                        API.play(data.token, data.deviceId, data.uris)
                                         setTimeout(function() {
                                             _update(data.token)
                                         }, waitTimeMS)
@@ -1250,6 +1287,7 @@
                                     track_btn.className = "track-btn"
                                     track_btn.innerHTML = `<div class="flex-track"><img class="image-control-3" src="${track.image}"><div class="title-and-artist"><p class="playlist-title">${track.name}</p><p class="playlist-total">${track.artist}</p></div></div>`
                                     playlist_div.appendChild(track_btn)
+                                    count_2 += 1
                                 }
                                 var button = document.createElement("button")
                                 button.className = "btn-playlist"
@@ -1340,9 +1378,12 @@
                 },
                 search(token) {
                     _search(token)
+                },
+                update(token) {
+                    _update(token)
                 }
             }
         })(API)
-        App.init()
+        App.init() 
     </script>
 </html>
