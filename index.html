@@ -341,6 +341,12 @@
                 background-color: rgba(0, 0, 0, 0);
                 color: #FFFFFF;
             }
+            .reload-btn {
+                width: 100px;
+                height: 35px;
+                margin-top: 20px;
+                border-radius: 50px;
+            }
             #home-search-tab {
                 display: flex;
                 align-items: center;
@@ -513,7 +519,7 @@
     <script>
         const API = (function() {
             const ifError = async () => {
-                window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api")
+                window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
                 App.reset()
             }
             const _requestToken = async (clientId, clientSecret, redirectURI) => {
@@ -987,6 +993,7 @@
                         App.reset()
                     }
                 } catch {
+                    const waitTimeMS = 450
                     const devices = await API.getDevices(token)
                     const followed = await API.getFollowed(token)
                     const myTracks = await API.getMyTracks(token)
@@ -1002,8 +1009,8 @@
                         console.log(data.token)
                         API.toggle(data.token)
                         setTimeout(function() {
-                            _update(token)
-                        }, 450)
+                            _update(data.token)
+                        }, waitTimeMS)
                     }
                     const letters = 18
                     const topNavbar = document.getElementsByClassName("top-navbar")[0]
@@ -1038,24 +1045,68 @@
                         if (found !== true) {
                             device = devices.devices[0]
                         }
-                        localStorage.setItem("deviceId", device.id)
-                        connect_message.textContent = `Connected to ${device.name}`
-                        connect_message.style.display = "block"
-                        status.style.display = "block"
-                        var recommended = []
-                        for (var artist in followed.artists.items) {
-                            artist = followed.artists.items[artist]
-                            var tracks = await API.getTopTracks(token, artist.id, info.country)
-                            for (var track in tracks.tracks) {
-                                track = tracks.tracks[track]
-                                if (track.is_playable === true) {
+                        if (device !== undefined) {
+                            localStorage.setItem("deviceId", device.id)
+                            connect_message.textContent = `Connected to ${device.name}`
+                            connect_message.style.display = "block"
+                            status.style.display = "block"
+                            var recommended = []
+                            for (var artist in followed.artists.items) {
+                                artist = followed.artists.items[artist]
+                                var tracks = await API.getTopTracks(token, artist.id, info.country)
+                                for (var track in tracks.tracks) {
+                                    track = tracks.tracks[track]
+                                    if (track.is_playable === true) {
+                                        if (track.name.length > letters) {
+                                            track.name = track.name.substring(0, letters) + "..."
+                                        }
+                                        if (track.artists[0].name.length > letters) {
+                                            track.artists[0].name = track.artists[0].name.substring(0, letters) + "..."
+                                        }
+                                        recommended.push({
+                                            image: track.album.images[0].url,
+                                            artist: track.artists[0].name,
+                                            id: track.id,
+                                            uri: track.uri,
+                                            name: track.name
+                                        })
+                                    }
+                                }
+                            }
+                            for (var item in recommended) {
+                                item = recommended[item]
+                                var track = document.createElement("button")
+                                track.id = JSON.stringify({
+                                    token: token,
+                                    deviceId: device.id,
+                                    uri: item.uri
+                                })
+                                track.onclick = function() {
+                                    var data = JSON.parse(this.id)
+                                    API.play(data.token, data.deviceId, [
+                                        data.uri
+                                    ])
+                                    setTimeout(function() {
+                                        _update(data.token)
+                                    }, waitTimeMS)
+                                }
+                                track.className = "track-container-recommends"
+                                track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
+                                recommended_container.appendChild(track)
+                            }
+                            var recently = []
+                            var found = []
+                            for (var track in recentlyPlayed.items) {
+                                track = recentlyPlayed.items[track].track
+                                if (found.includes(track.name.toLowerCase()) != true) {
+                                    found.push(track.name.toLowerCase())
                                     if (track.name.length > letters) {
                                         track.name = track.name.substring(0, letters) + "..."
                                     }
                                     if (track.artists[0].name.length > letters) {
                                         track.artists[0].name = track.artists[0].name.substring(0, letters) + "..."
                                     }
-                                    recommended.push({
+                                    recently.push({
                                         image: track.album.images[0].url,
                                         artist: track.artists[0].name,
                                         id: track.id,
@@ -1064,41 +1115,37 @@
                                     })
                                 }
                             }
-                        }
-                        for (var item in recommended) {
-                            item = recommended[item]
-                            var track = document.createElement("button")
-                            track.id = JSON.stringify({
-                                token: token,
-                                deviceId: device.id,
-                                uri: item.uri
-                            })
-                            track.onclick = function() {
-                                var data = JSON.parse(this.id)
-                                API.play(data.token, data.deviceId, [
-                                    data.uri
-                                ])
-                                setTimeout(function() {
-                                    _update(token)
-                                }, 450)
+                            for (var item in recently) {
+                                item = recently[item]
+                                var track = document.createElement("button")
+                                track.id = JSON.stringify({
+                                    token: token,
+                                    deviceId: device.id,
+                                    uri: item.uri
+                                })
+                                track.onclick = function() {
+                                    var data = JSON.parse(this.id)
+                                    API.play(data.token, data.deviceId, [
+                                        data.uri
+                                    ])
+                                    setTimeout(function() {
+                                        _update(data.token)
+                                    }, waitTimeMS)
+                                }
+                                track.className = "track-container-recommends"
+                                track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
+                                recently_container.appendChild(track)
                             }
-                            track.className = "track-container-recommends"
-                            track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
-                            recommended_container.appendChild(track)
-                        }
-                        var recently = []
-                        var found = []
-                        for (var track in recentlyPlayed.items) {
-                            track = recentlyPlayed.items[track].track
-                            if (found.includes(track.name.toLowerCase()) != true) {
-                                found.push(track.name.toLowerCase())
+                            var topSongs = []
+                            for (var track in myTopSongs.items) {
+                                track = myTopSongs.items[track]
                                 if (track.name.length > letters) {
                                     track.name = track.name.substring(0, letters) + "..."
                                 }
                                 if (track.artists[0].name.length > letters) {
                                     track.artists[0].name = track.artists[0].name.substring(0, letters) + "..."
                                 }
-                                recently.push({
+                                topSongs.push({
                                     image: track.album.images[0].url,
                                     artist: track.artists[0].name,
                                     id: track.id,
@@ -1106,182 +1153,160 @@
                                     name: track.name
                                 })
                             }
-                        }
-                        for (var item in recently) {
-                            item = recently[item]
-                            var track = document.createElement("button")
-                            track.id = JSON.stringify({
-                                token: token,
-                                deviceId: device.id,
-                                uri: item.uri
-                            })
-                            track.onclick = function() {
-                                var data = JSON.parse(this.id)
-                                API.play(data.token, data.deviceId, [
-                                    data.uri
-                                ])
-                                setTimeout(function() {
-                                    _update(token)
-                                }, 450)
-                            }
-                            track.className = "track-container-recommends"
-                            track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
-                            recently_container.appendChild(track)
-                        }
-                        var topSongs = []
-                        for (var track in myTopSongs.items) {
-                            track = myTopSongs.items[track]
-                            if (track.name.length > letters) {
-                                track.name = track.name.substring(0, letters) + "..."
-                            }
-                            if (track.artists[0].name.length > letters) {
-                                track.artists[0].name = track.artists[0].name.substring(0, letters) + "..."
-                            }
-                            topSongs.push({
-                                image: track.album.images[0].url,
-                                artist: track.artists[0].name,
-                                id: track.id,
-                                uri: track.uri,
-                                name: track.name
-                            })
-                        }
-                        for (var item in topSongs) {
-                            item = topSongs[item]
-                            var track = document.createElement("button")
-                            track.id = JSON.stringify({
-                                token: token,
-                                deviceId: device.id,
-                                uri: item.uri
-                            })
-                            track.onclick = function() {
-                                var data = JSON.parse(this.id)
-                                API.play(data.token, data.deviceId, [
-                                    data.uri
-                                ])
-                                setTimeout(function() {
-                                    _update(token)
-                                }, 450)
-                            }
-                            track.className = "track-container-recommends"
-                            track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
-                            top_songs_container.appendChild(track)
-                        }
-                        var playlists = []
-                        var liked = []
-                        for (var track in myTracks.items) {
-                            track = myTracks.items[track].track
-                            liked.push({
-                                image: track.album.images[0].url,
-                                artist: track.artists[0].name,
-                                id: track.id,
-                                uri: track.uri,
-                                name: track.name
-                            })
-                        }
-                        playlists.push({
-                            image: "https://misc.scdn.co/liked-songs/liked-songs-300.png",
-                            name: "Liked Songs",
-                            tracks: liked,
-                            items: liked.length,
-                            total: myTracks.total,
-                            owner: info.display_name
-                        })
-                        for (var playlist in myPlaylists.items) {
-                            playlist = myPlaylists.items[playlist]
-                            if (playlist.tracks.total > 0) {
-                                var image = null
-                                if (playlist.images.length > 0) {
-                                    image = playlist.images[0].url
-                                }
-                                tracks = await API.getPlaylist(token, playlist.id)
-                                tracks = tracks.tracks.items
-                                var items = []
-                                for (var track in tracks) {
-                                    track = tracks[track].track
-                                    items.push({
-                                        image: track.album.images[0].url,
-                                        artist: track.artists[0].name,
-                                        id: track.id,
-                                        uri: track.uri,
-                                        name: track.name
-                                    })
-                                }
-                                playlists.push({
-                                    image: image,
-                                    name: playlist.name,
-                                    tracks: items,
-                                    items: items.length,
-                                    total: items.length,
-                                    owner: playlist.owner.display_name
-                                })
-                            }
-                        }
-                        var count = 1
-                        for (var playlist in playlists) {
-                            playlist = playlists[playlist]
-                            var playlist_div = document.createElement("div")
-                            playlist_div.className = "playlist-tab"
-                            playlist_div.innerHTML = `<p class="playlist-tab-title">${playlist.name}</p>`
-                            for (var track in playlist.tracks) {
-                                track = playlist.tracks[track]
-                                var track_btn = document.createElement("button")
-                                track_btn.id = JSON.stringify({
+                            for (var item in topSongs) {
+                                item = topSongs[item]
+                                var track = document.createElement("button")
+                                track.id = JSON.stringify({
                                     token: token,
                                     deviceId: device.id,
-                                    uri: track.uri
+                                    uri: item.uri
                                 })
-                                track_btn.onclick = function() {
+                                track.onclick = function() {
                                     var data = JSON.parse(this.id)
                                     API.play(data.token, data.deviceId, [
                                         data.uri
                                     ])
                                     setTimeout(function() {
-                                        _update(token)
-                                    }, 450)
+                                        _update(data.token)
+                                    }, waitTimeMS)
                                 }
-                                track_btn.className = "track-btn"
-                                track_btn.innerHTML = `<div class="flex-track"><img class="image-control-3" src="${track.image}"><div class="title-and-artist"><p class="playlist-title">${track.name}</p><p class="playlist-total">${track.artist}</p></div></div>`
-                                playlist_div.appendChild(track_btn)
+                                track.className = "track-container-recommends"
+                                track.innerHTML = `<img class="image-recommend" src='${item.image}'><p class="track-rec-name">${item.name}</p><p class="track-rec-artist">${item.artist}</p>`
+                                top_songs_container.appendChild(track)
                             }
-                            var button = document.createElement("button")
-                            button.className = "btn-playlist"
-                            button.id = count
-                            button.onclick = function() {
-                                App.select("playlist-tab", parseInt(this.id))
+                            var playlists = []
+                            var liked = []
+                            for (var track in myTracks.items) {
+                                track = myTracks.items[track].track
+                                liked.push({
+                                    image: track.album.images[0].url,
+                                    artist: track.artists[0].name,
+                                    id: track.id,
+                                    uri: track.uri,
+                                    name: track.name
+                                })
                             }
-                            if (playlist.items === playlist.total) {
-                                button.innerHTML = `<div class="flex-track"><img class="image-control-2" src="${playlist.image}"><div class="title-and-artist"><p class="playlist-title">${playlist.name}</p><p class="playlist-total">${playlist.total} Songs</p></div></div>`
-                            } else {
-                                button.innerHTML = `<div class="flex-track"><img class="image-control-2" src="${playlist.image}"><div class="title-and-artist"><p class="playlist-title">${playlist.name}</p><p class="playlist-total">${playlist.items} out of ${playlist.total} Songs</p></div></div>`
+                            playlists.push({
+                                image: "https://misc.scdn.co/liked-songs/liked-songs-300.png",
+                                name: "Liked Songs",
+                                tracks: liked,
+                                items: liked.length,
+                                total: myTracks.total,
+                                owner: info.display_name
+                            })
+                            for (var playlist in myPlaylists.items) {
+                                playlist = myPlaylists.items[playlist]
+                                if (playlist.tracks.total > 0) {
+                                    var image = null
+                                    if (playlist.images.length > 0) {
+                                        image = playlist.images[0].url
+                                    }
+                                    tracks = await API.getPlaylist(token, playlist.id)
+                                    tracks = tracks.tracks.items
+                                    var items = []
+                                    for (var track in tracks) {
+                                        track = tracks[track].track
+                                        items.push({
+                                            image: track.album.images[0].url,
+                                            artist: track.artists[0].name,
+                                            id: track.id,
+                                            uri: track.uri,
+                                            name: track.name
+                                        })
+                                    }
+                                    playlists.push({
+                                        image: image,
+                                        name: playlist.name,
+                                        tracks: items,
+                                        items: items.length,
+                                        total: items.length,
+                                        owner: playlist.owner.display_name
+                                    })
+                                }
                             }
-                            library.appendChild(playlist_div)
-                            library_home.appendChild(button)
-                            count += 1
+                            var count = 1
+                            for (var playlist in playlists) {
+                                playlist = playlists[playlist]
+                                var playlist_div = document.createElement("div")
+                                playlist_div.className = "playlist-tab"
+                                playlist_div.innerHTML = `<p class="playlist-tab-title">${playlist.name}</p>`
+                                for (var track in playlist.tracks) {
+                                    track = playlist.tracks[track]
+                                    var track_btn = document.createElement("button")
+                                    track_btn.id = JSON.stringify({
+                                        token: token,
+                                        deviceId: device.id,
+                                        uri: track.uri
+                                    })
+                                    track_btn.onclick = function() {
+                                        var data = JSON.parse(this.id)
+                                        API.play(data.token, data.deviceId, [
+                                            data.uri
+                                        ])
+                                        setTimeout(function() {
+                                            _update(data.token)
+                                        }, waitTimeMS)
+                                    }
+                                    track_btn.className = "track-btn"
+                                    track_btn.innerHTML = `<div class="flex-track"><img class="image-control-3" src="${track.image}"><div class="title-and-artist"><p class="playlist-title">${track.name}</p><p class="playlist-total">${track.artist}</p></div></div>`
+                                    playlist_div.appendChild(track_btn)
+                                }
+                                var button = document.createElement("button")
+                                button.className = "btn-playlist"
+                                button.id = count
+                                button.onclick = function() {
+                                    App.select("playlist-tab", parseInt(this.id))
+                                }
+                                if (playlist.items === playlist.total) {
+                                    button.innerHTML = `<div class="flex-track"><img class="image-control-2" src="${playlist.image}"><div class="title-and-artist"><p class="playlist-title">${playlist.name}</p><p class="playlist-total">${playlist.total} Songs</p></div></div>`
+                                } else {
+                                    button.innerHTML = `<div class="flex-track"><img class="image-control-2" src="${playlist.image}"><div class="title-and-artist"><p class="playlist-title">${playlist.name}</p><p class="playlist-total">${playlist.items} out of ${playlist.total} Songs</p></div></div>`
+                                }
+                                library.appendChild(playlist_div)
+                                library_home.appendChild(button)
+                                count += 1
+                            }
+                            await _update(token)
+                        } else {
+                            const top = document.getElementsByClassName("top")[0]
+                            const bottom = document.getElementsByClassName("bottom-navbar")[0]
+                            const screens = document.getElementsByClassName("screens")[0]
+                            top.style.display = "none"
+                            bottom.style.display = "none"
+                            screens.setAttribute("style", "display: flex; align-items: center; justify-content: center;")
+                            screens.innerHTML = "<p class='playlist-title' style='text-align: center; font-weight: 600; font-size: 17.5px; letter-spacing: 0.5px;'>Currently, there are no devices online.<br>Click on the button below to reload.<br><button class='reload-btn' onclick='window.location.reload()'>Reload</button></p>"
                         }
-                        await _update(token)
                     } else {
                         console.log("You're not Pro.")
                     }
                     App.select("tab", 0)
-                    App.select("Screen", 1)
-                    App.select("playlist-tab", 0)
-                    App.select("search-tab", 0)
-                    controls.style.bottom = bottomNavbar.offsetHeight -1 + "px"
-                    content.style.marginTop = topNavbar.offsetHeight + 11 + "px"
-                    content.style.paddingBottom = controls.offsetHeight + bottomNavbar.offsetHeight + 5 + "px"
-                    const screenSize = window.screen.height * window.screen.width
-                    const windowSize = window.innerWidth * window.innerHeight
-                    if ((windowSize/screenSize)*100 > 90) {
-                        const bottomSize = (controls.offsetHeight + bottomNavbar.offsetHeight) * (controls.offsetWidth + bottomNavbar.offsetWidth)
-                        const topSize = (topNavbar.offsetHeight * topNavbar.offsetWidth)
-                        const viewArea = screenSize - bottomSize - topSize
-                        const percentage = (viewArea/screenSize)*100
-                        if (percentage < 50) {
-                            const raspberry_certified = document.getElementsByClassName("raspberry-pi-powered")[0]
-                            raspberry_certified.style.display = "block"
-                            localStorage.setItem("deviceSet", "Raspberry Pi/Tablet")
-                        } else {
-                            localStorage.setItem("deviceSet", "Phone")
+                    if (localStorage.getItem("deviceId") != null) {
+                        try {
+                            App.select("Screen", 1)
+                            App.select("playlist-tab", 0)
+                            App.select("search-tab", 0)
+                            controls.style.bottom = bottomNavbar.offsetHeight -1 + "px"
+                            content.style.marginTop = topNavbar.offsetHeight + 11 + "px"
+                            content.style.paddingBottom = controls.offsetHeight + bottomNavbar.offsetHeight + 5 + "px"
+                            const screenSize = window.screen.height * window.screen.width
+                            const windowSize = window.innerWidth * window.innerHeight
+                            const logo = document.getElementsByClassName("logo")[0]
+                            logo.style.width = logo.offsetWidth
+                            logo.style.height = logo.offsetHeight
+                            if ((windowSize/screenSize)*100 > 90) {
+                                const bottomSize = (controls.offsetHeight + bottomNavbar.offsetHeight) * (controls.offsetWidth + bottomNavbar.offsetWidth)
+                                const topSize = (topNavbar.offsetHeight * topNavbar.offsetWidth)
+                                const viewArea = screenSize - bottomSize - topSize
+                                const percentage = (viewArea/screenSize)*100
+                                if (percentage < 50) {
+                                    const raspberry_certified = document.getElementsByClassName("raspberry-pi-powered")[0]
+                                    raspberry_certified.style.display = "block"
+                                    localStorage.setItem("deviceSet", "Raspberry Pi/Tablet")
+                                } else {
+                                    localStorage.setItem("deviceSet", "Phone")
+                                }
+                            }
+                        } catch {
                         }
                     }
                 }
@@ -1294,7 +1319,7 @@
                     API.requestToken(
                         "0b03e149303f41669f3c4a34c576f298",
                         "8706bbc78b0140bd9d17938411a1003a",
-                        "https://oxfordbot.github.io/spotify.home.api"
+                        "https://oxfordbot.github.io/spotify.home.api/"
                     )
                 }
             }
@@ -1310,7 +1335,7 @@
                 },
                 reset() {
                     localStorage.clear()
-                    window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api")
+                    window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
                     window.location.reload()
                 },
                 search(token) {
