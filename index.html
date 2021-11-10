@@ -120,7 +120,7 @@
             .logo {
                 padding-top: 12.5px;
                 padding-bottom: 12.5px;
-                width: 17.5vh;
+                width: 125px;
             }
             .raspberry-pi-powered {
                 width: 100px;
@@ -430,7 +430,7 @@
             }
         </style>
     </head>
-    <body onload="App.init()">
+    <body>
         <div class="screens">
             <div class="screen" id="loading-screen">
                 <div class="lds-ring">
@@ -1290,6 +1290,9 @@
                             content.style.paddingBottom = controls.offsetHeight + bottomNavbar.offsetHeight + 5 + "px"
                             const screenSize = window.screen.height * window.screen.width
                             const windowSize = window.innerWidth * window.innerHeight
+                            const logo = document.getElementsByClassName("logo")[0]
+                            logo.style.width = logo.offsetWidth
+                            logo.style.height = logo.offsetHeight
                             if ((windowSize/screenSize)*100 > 90) {
                                 const bottomSize = (controls.offsetHeight + bottomNavbar.offsetHeight) * (controls.offsetWidth + bottomNavbar.offsetWidth)
                                 const topSize = (topNavbar.offsetHeight * topNavbar.offsetWidth)
@@ -1331,8 +1334,8 @@
                     _home()
                 },
                 reset() {
-                    localStorage.clear()
                     window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
+                    localStorage.clear()
                     window.location.reload()
                 },
                 search(token) {
@@ -1340,5 +1343,6 @@
                 }
             }
         })(API)
+        App.init()
     </script>
 </html>
