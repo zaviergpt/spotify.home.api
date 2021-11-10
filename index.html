@@ -5,12 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
             * {
                 border: 0;
                 margin: 0;
                 padding: 0;
                 outline: 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: 'Segoe UI', 'Quicksand', Tahoma, Verdana, sans-serif;
                 font-weight: 600;
                 user-select: none;
             }
@@ -551,54 +552,56 @@
                 }
             }
             const _getToken = async () => {
-                try {
-                    const token = localStorage.getItem("token")
-                    return token
-                } catch {
-                    await ifError()
-                }
+                const token = localStorage.getItem("token")
+                return token
             }
             const _me = async (token) => {
+                const result = await fetch("https://api.spotify.com/v1/me", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch("https://api.spotify.com/v1/me", {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _getFollowed = async (token) => {
+                const result = await fetch("https://api.spotify.com/v1/me/following?type=artist", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch("https://api.spotify.com/v1/me/following?type=artist", {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _getDevices = async (token) => {
+                const result = await fetch("https://api.spotify.com/v1/me/player/devices", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch("https://api.spotify.com/v1/me/player/devices", {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _play = async (token, deviceId, URIs) => {
@@ -617,102 +620,115 @@
                 }
             }
             const _getTopTracks = async (token, id, market) => {
+                const result = await fetch(`https://api.spotify.com/v1/artists/${id}/top-tracks?limit=20&market=${market.toUpperCase()}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch(`https://api.spotify.com/v1/artists/${id}/top-tracks?limit=20&market=${market.toUpperCase()}`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _getRecentlyPlayed = async (token) => {
+                const result = await fetch(`https://api.spotify.com/v1/me/player/recently-played`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch(`https://api.spotify.com/v1/me/player/recently-played`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
-                
             }
             const _getMyTracks = async (token) => {
+                const result = await fetch(`https://api.spotify.com/v1/me/tracks`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch(`https://api.spotify.com/v1/me/tracks`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _getMyPlaylists = async (token) => {
+                const result = await fetch(`https://api.spotify.com/v1/me/playlists`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch(`https://api.spotify.com/v1/me/playlists`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _getMyTopSongs = async (token) => {
+                const result = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=10&offset=13`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=10&offset=13`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _getPlaylist = async (token, id) => {
+                const result = await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _search = async (token, query, type) => {
+                const result = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await result.json()
                 try {
-                    const result = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    })
-                    const data = await result.json()
-                    return data
+                    if (data.error.status === 401) {
+                        await ifError()
+                    }
                 } catch {
-                    await ifError()
+                    return data
                 }
             }
             const _currentlyPlaying = async (token) => {
@@ -724,7 +740,13 @@
                         }
                     })
                     const data = await result.json()
-                    return data
+                    try {
+                        if (data.error.status === 401) {
+                            await ifError()
+                        }
+                    } catch {
+                        return data
+                    }
                 } catch {
                     return null
                 }
