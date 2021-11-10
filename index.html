@@ -1290,9 +1290,6 @@
                             content.style.paddingBottom = controls.offsetHeight + bottomNavbar.offsetHeight + 5 + "px"
                             const screenSize = window.screen.height * window.screen.width
                             const windowSize = window.innerWidth * window.innerHeight
-                            const logo = document.getElementsByClassName("logo")[0]
-                            logo.style.width = logo.offsetWidth + "px"
-                            logo.style.height = logo.offsetHeight + "px"
                             if ((windowSize/screenSize)*100 > 90) {
                                 const bottomSize = (controls.offsetHeight + bottomNavbar.offsetHeight) * (controls.offsetWidth + bottomNavbar.offsetWidth)
                                 const topSize = (topNavbar.offsetHeight * topNavbar.offsetWidth)
