@@ -5,12 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
             * {
                 border: 0;
                 margin: 0;
                 padding: 0;
                 outline: 0;
-                font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+                font-family: 'Segoe UI', 'Quicksand', Tahoma, Verdana, sans-serif;
                 font-weight: 600;
                 user-select: none;
             }
@@ -512,8 +513,8 @@
     <script>
         const API = (function() {
             const ifError = async () => {
-                window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
-                window.location.reload()
+                window.history.pushState("", "", "http://127.0.0.1:5500/index.html")
+                App.reset()
             }
             const _requestToken = async (clientId, clientSecret, redirectURI) => {
                 if (window.location.search.length > 0) {
@@ -1293,7 +1294,7 @@
                     API.requestToken(
                         "0b03e149303f41669f3c4a34c576f298",
                         "8706bbc78b0140bd9d17938411a1003a",
-                        "https://oxfordbot.github.io/spotify.home.api/"
+                        "http://127.0.0.1:5500/index.html"
                     )
                 }
             }
@@ -1309,7 +1310,7 @@
                 },
                 reset() {
                     localStorage.clear()
-                    window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
+                    window.history.pushState("", "", "http://127.0.0.1:5500/index.html")
                     window.location.reload()
                 },
                 search(token) {
