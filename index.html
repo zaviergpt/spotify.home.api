@@ -222,7 +222,6 @@
                 left: 0;
                 right: 0;
                 background-color: #333333;
-                padding: 5px;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
             }
             .active {
@@ -347,6 +346,23 @@
                 margin-top: 20px;
                 border-radius: 50px;
             }
+            .progress {
+                width: 100%;
+                background-color: #262626;
+                height: 4px;
+            }
+            .progress-juice {
+                background-color: #23cf5f;
+                width: 0%;
+                height: 4px;
+            }
+            .frame {
+                width: 100%;
+                font-size: 12.5px;
+            }
+            #image-frame {
+                padding: 5px;
+            }
             #home-search-tab {
                 display: flex;
                 align-items: center;
@@ -364,6 +380,9 @@
             #pause-icon {
                 font-size: 22.5px;
                 margin-left: 5px;
+            }
+            #title-n-artist {
+                margin-left: 10px;
             }
             i {
                 font-size: 20px;
@@ -432,7 +451,7 @@
     </head>
     <body>
         <div class="screens">
-            <div class="screen" id="loading-screen">
+            <div class="screen" id="loading-screen" style="z-index: 1000000">
                 <div class="lds-ring">
                     <div></div><div></div><div></div><div></div>
                 </div>
@@ -488,14 +507,16 @@
                     </div>
                 </div>
                 <div class="top">
-                    <div class="flex-track" style="margin-left: 0px;">
-                        <div class="image-control" id="background"></div>
-                        <div class="title-and-artist" id="frame">
-                            <p class="playlist-title" id="title"></p>
-                            <p class="playlist-total" id="artist"></p>
-                        </div>
-                        <div class="control-set">
-                            <button class="toggle-btn" id="toggle-btn"></button>
+                    <div class="progress">
+                        <div class="progress-juice"></div>
+                    </div>
+                    <div class="frame">
+                        <div class="flex-track">
+                            <div class="image-control" id="image-frame"></div>
+                            <div class="title-and-artist" id="title-n-artist">
+                                <p class="playlist-title" id="title"></p>
+                                <p class="playlist-total" id="artist"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -857,28 +878,31 @@
                         track = tracks[track]
                         const array = await range(count, tracks.length)
                         const uris = []
+                        const tracks2 = []
                         for (var i in array) {
                             i = array[i]
                             uris.push(tracks[i].uri)
+                            tracks2.push(tracks[i])
                         }
                         track = {
                             image: track.album.images[0].url,
                             artist: track.artists[0].name,
                             id: track.id,
                             uris: uris,
-                            name: track.name
+                            name: track.name,
                         }
                         var track_btn = document.createElement("button")
                         track_btn.id = JSON.stringify({
                             token: token,
                             deviceId: deviceId,
-                            uris: track.uris
+                            uris: uris,
+                            tracks: tracks2
                         })
                         track_btn.onclick = function() {
                             var data = JSON.parse(this.id)
                             API.play(data.token, data.deviceId, data.uris)
                             setTimeout(function() {
-                                _update(token)
+                                _update(token, data.tracks)
                             }, 450)
                         }
                         track_btn.className = "track-btn"
@@ -902,35 +926,62 @@
                     }
                 }
             }
-            const _update = async (token) => {
-                const image_frame = document.getElementById("background")
+            const _update = async (token, tracks=null) => {
                 const currentlyPlaying = await API.currentlyPlaying(token)
                 const toggle_btn = document.getElementsByClassName("toggle-btn")[0]
                 const device = localStorage.getItem("deviceSet")
                 if (currentlyPlaying !== null && currentlyPlaying !== undefined) {
-                    const track = currentlyPlaying.item
-                    const image = document.createElement("img")
-                    const info = {
-                        image: track.album.images[0].url,
-                        artist: track.artists[0].name,
-                        id: track.id,
-                        uri: track.uri,
-                        name: track.name
-                    }
-                    image_frame.innerHTML = ""
-                    image.src = info.image
-                    image.className = "image-control"
-                    info.name = info.name.split(" (")[0]
-                    document.getElementById("title").textContent = info.name
-                    document.getElementById("artist").textContent = info.artist
-                    if (currentlyPlaying.is_playing === true) {
-                        toggle_btn.innerHTML = `<i class="fas fa-pause" id="pause-icon"></i>`
+                    if (tracks !== null) {
+                        var count = 0
+                        var percent = 0
+                        start_time = new Date().getTime()
+                        track = tracks[count]
+                        var id = setInterval(frame, 100)
+                        var found_list = []
+                        function frame() {
+                            if (percent > 99) {
+                                count += 1
+                                percent = 0
+                                track = tracks[count]
+                                start_time = new Date().getTime()
+                                document.getElementsByClassName("progress-juice")[0].style.width = 0 + "%"
+                            } else if (localStorage.getItem("interrupt") === "true") {
+                                localStorage.getItem("interrupt", false)
+                                document.getElementsByClassName("progress-juice")[0].style.width = 0 + "%"
+                                clearInterval(id)
+                            } else {
+                                if (found_list.includes(count) !== true) {
+                                    found_list.push(count)
+                                    track = tracks[count]
+                                    trk = {
+                                        image: track.album.images[0].url,
+                                        artist: track.artists[0].name,
+                                        id: track.id,
+                                        uri: track.uri,
+                                        name: track.name,
+                                    }
+                                    const frame = document.getElementById("image-frame")
+                                    const title = document.getElementById("title")
+                                    const artist = document.getElementById("artist")
+                                    const image = document.createElement("img")
+                                    frame.innerHTML = ""
+                                    image.src = trk.image
+                                    image.className = "image-control"
+                                    title.textContent = trk.name
+                                    artist.textContent = trk.artist
+                                    frame.appendChild(image)
+                                }
+                                current_time = new Date().getTime()
+                                difference = (current_time - start_time)
+                                percent = (difference/track.duration_ms) * 100
+                                document.getElementsByClassName("progress-juice")[0].style.width = percent + "%"
+                                delete current_time
+                            }
+                            
+                        }
                     } else {
-                        toggle_btn.innerHTML = `<i class="fas fa-play"></i>`
+                        console.log(currentlyPlaying)
                     }
-                    image_frame.appendChild(image)
-                } else {
-                    image_frame.innerHTML = ""
                 }
             }
             const _select = async (type, number) => {
@@ -1014,17 +1065,6 @@
                     const myPlaylists = await API.getMyPlaylists(token)
                     const recentlyPlayed = await API.getRecentlyPlayed(token)
                     const myTopSongs = await API.getMyTopSongs(token)
-                    const toggle_btn = document.getElementsByClassName("toggle-btn")[0]
-                    toggle_btn.id = JSON.stringify({
-                        token: token
-                    })
-                    toggle_btn.onclick = function() {
-                        const data = JSON.parse(this.id)
-                        API.toggle(data.token)
-                        setTimeout(function() {
-                            _update(data.token)
-                        }, waitTimeMS)
-                    }
                     const letters = 18
                     const topNavbar = document.getElementsByClassName("top-navbar")[0]
                     const bottomNavbar = document.getElementsByClassName("bottom-navbar")[0]
@@ -1038,6 +1078,7 @@
                     const library = document.getElementById("library")
                     const library_home = document.getElementById("home-playlist-tab")
                     const input_btn = document.getElementsByClassName("input-btn")[0]
+                    localStorage.setItem("interrupt", false)
                     input_btn.id = JSON.stringify({
                         token: token
                     })
@@ -1105,6 +1146,7 @@
                                     var data = JSON.parse(this.id)
                                     API.play(data.token, data.deviceId, data.uris)
                                     setTimeout(function() {
+                                        localStorage.setItem("interrupt", true)
                                         _update(data.token)
                                     }, waitTimeMS)
                                 }
