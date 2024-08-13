@@ -540,7 +540,7 @@
     <script>
         const API = (function() {
             const ifError = async () => {
-                window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
+                window.history.pushState("", "", "https://zaviergpt.github.io/spotify.home.api/")
                 App.reset()
             }
             const _requestToken = async (clientId, clientSecret, redirectURI) => {
@@ -1399,7 +1399,7 @@
                     API.requestToken(
                         "0b03e149303f41669f3c4a34c576f298",
                         "8706bbc78b0140bd9d17938411a1003a",
-                        "https://oxfordbot.github.io/spotify.home.api/"
+                        "https://zaviergpt.github.io/spotify.home.api/"
                     )
                 }
             }
@@ -1414,7 +1414,7 @@
                     _home()
                 },
                 reset() {
-                    window.history.pushState("", "", "https://oxfordbot.github.io/spotify.home.api/")
+                    window.history.pushState("", "", "https://zaviergpt.github.io/spotify.home.api/")
                     localStorage.clear()
                     window.location.reload()
                 },
